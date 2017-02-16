@@ -1,5 +1,6 @@
 package com.github.kazenetu.jerseyServer.resource;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -14,33 +15,90 @@ import com.github.kazenetu.jerseyServer.entity.TestData;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Path("dl")
 public class DownloadResource {
-    @GET
-    @Path("pdf")
-    @Produces("application/pdf")
-    public Response pdf() {
-    	String jasperPath = DownloadResource.class.getClassLoader().getResource("sample.jasper").getPath();
+	@GET
+	@Path("pdf")
+	@Produces("application/pdf")
+	public Response pdf() {
 
-    	List<?> dataSourceList = Arrays.asList(new TestData("name",20));
-    	JRDataSource dataSource = new JRBeanCollectionDataSource(dataSourceList);
+		List<?> dataSourceList = Arrays.asList(new TestData("name", 20));
+		JRDataSource dataSource = new JRBeanCollectionDataSource(dataSourceList);
 
-    	Map<String,Object> params = new HashMap<>();
+		Map<String, Object> params = new HashMap<>();
 
-        try {
-        	byte[] result = JasperRunManager.runReportToPdf(jasperPath,params,dataSource);
-
-            return Response.ok(result)
-                    //.header("Content-Disposition", "attachment; filename=" + URLEncoder.encode("test.pdf", "utf-8"))
-                    .build();
-        } catch (JRException e) {
-			// TODO 自動生成された catch ブロック
-            return Response.serverError().build();
+		try {
+			return Response.ok(getPdfBytes("sample", params, dataSource))
+					// .header("Content-Disposition", "attachment; filename=" +
+					// URLEncoder.encode("test.pdf", "utf-8"))
+					.build();
+		} catch (JRException e) {
+			return Response.serverError().build();
 		}
-    }
+	}
 
+	@GET
+	@Path("pdf2")
+	@Produces("application/pdf")
+	public Response pdf2() {
 
+		List<?> dataSourceList = Arrays.asList(new TestData("name", 20));
+		JRDataSource dataSource = new JRBeanCollectionDataSource(dataSourceList);
+
+		Map<String, Object> params = new HashMap<>();
+
+		try {
+			byte[] result = getPdfBytes("sample2", params, dataSource);
+			return Response.ok(result)
+					// .header("Content-Disposition", "attachment; filename=" +
+					// URLEncoder.encode("test.pdf", "utf-8"))
+					.build();
+		} catch (JRException e) {
+			return Response.serverError().build();
+		}
+	}
+
+	/**
+	 * PDFデータの取得
+	 *
+	 * @param reportName レポート名
+	 * @param params パラメータ
+	 * @param dataSource データソース
+	 * @return PDFデータ
+	 * @throws JRException 実行時の例外エラー
+	 */
+	private byte[] getPdfBytes(String reportName, Map<String, Object> params, JRDataSource dataSource)
+			throws JRException {
+		String filePath = getResourcePath(reportName + ".jasper");
+
+		if (filePath != null) {
+			System.out.println(filePath);
+
+			return JasperRunManager.runReportToPdf(filePath, params, dataSource);
+		}
+
+		filePath = getResourcePath(reportName + ".jrxml");
+		System.out.println(filePath);
+		JasperReport report = JasperCompileManager.compileReport(filePath);
+		return JasperRunManager.runReportToPdf(report, params, dataSource);
+	}
+
+	/**
+	 * リソースのパスを取得する
+	 *
+	 * @param fileName リソースファイル名
+	 * @return リソースファイルのパス
+	 */
+	private String getResourcePath(String fileName) {
+		URL fileUrl = DownloadResource.class.getClassLoader().getResource(fileName);
+		if (fileUrl == null) {
+			return null;
+		}
+		return fileUrl.getPath();
+	}
 }

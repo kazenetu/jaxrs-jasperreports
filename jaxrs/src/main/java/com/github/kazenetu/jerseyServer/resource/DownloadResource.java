@@ -22,6 +22,11 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Path("dl")
 public class DownloadResource {
+
+	/**
+	 * PDF(Label表示)の表示
+	 * @return
+	 */
 	@GET
 	@Path("pdf")
 	@Produces("application/pdf")
@@ -42,6 +47,10 @@ public class DownloadResource {
 		}
 	}
 
+	/**
+	 * PDF(バーコード表示)の表示
+	 * @return
+	 */
 	@GET
 	@Path("pdf2")
 	@Produces("application/pdf")
@@ -54,6 +63,31 @@ public class DownloadResource {
 
 		try {
 			byte[] result = getPdfBytes("sample2", params, dataSource);
+			return Response.ok(result)
+					// .header("Content-Disposition", "attachment; filename=" +
+					// URLEncoder.encode("test.pdf", "utf-8"))
+					.build();
+		} catch (JRException e) {
+			return Response.serverError().build();
+		}
+	}
+
+	/**
+	 * PDF(日本語表示)の表示
+	 * @return
+	 */
+	@GET
+	@Path("pdf3")
+	@Produces("application/pdf")
+	public Response pdf3() {
+
+		List<?> dataSourceList = Arrays.asList(new TestData("name", 20));
+		JRDataSource dataSource = new JRBeanCollectionDataSource(dataSourceList);
+
+		Map<String, Object> params = new HashMap<>();
+
+		try {
+			byte[] result = getPdfBytes("sample3", params, dataSource);
 			return Response.ok(result)
 					// .header("Content-Disposition", "attachment; filename=" +
 					// URLEncoder.encode("test.pdf", "utf-8"))
@@ -77,13 +111,10 @@ public class DownloadResource {
 		String filePath = getResourcePath(reportName + ".jasper");
 
 		if (filePath != null) {
-			System.out.println(filePath);
-
 			return JasperRunManager.runReportToPdf(filePath, params, dataSource);
 		}
 
 		filePath = getResourcePath(reportName + ".jrxml");
-		System.out.println(filePath);
 		JasperReport report = JasperCompileManager.compileReport(filePath);
 		return JasperRunManager.runReportToPdf(report, params, dataSource);
 	}

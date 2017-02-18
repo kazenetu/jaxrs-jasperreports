@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-02-18T16:44:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sample4" columnCount="3" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="267" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="896e09ba-f063-4fce-80d5-0a7ff2f608c0">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="age" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="220" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement key="" mode="Opaque" x="0" y="0" width="260" height="200" forecolor="#000000" backcolor="#FCE3EB" uuid="00017b74-03d2-4dc6-bd5a-ca4ccb651774">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="3.0" lineColor="#D41D19"/>
+				</box>
+				<componentElement>
+					<reportElement x="0" y="0" width="250" height="40" uuid="faf072e2-1876-4708-861c-fee4911bfb9d">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.barWidth" value="pixel"/>
+					</reportElement>
+					<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false">
+						<jr:codeExpression><![CDATA[$F{name}]]></jr:codeExpression>
+					</jr:barbecue>
+				</componentElement>
+				<textField>
+					<reportElement x="0" y="154" width="260" height="46" forecolor="#080807" uuid="18e4bc29-121c-42ac-8d42-e25ac0f5853f"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font fontName="ipaexg" size="16"/>
+					</textElement>
+					<textFieldExpression><![CDATA["数値："+$F{age}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

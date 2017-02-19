@@ -132,6 +132,39 @@ public class DownloadResource {
 	}
 
 	/**
+	 * PDF(オブジェクト関連付け+QRコード)の表示
+	 * @return
+	 */
+	@GET
+	@Path("pdf5")
+	@Produces("application/pdf")
+	public Response pdf5() {
+
+		List<TestData> src = new ArrayList<>();
+		src.add(new TestData("name20", 20));
+		src.add(new TestData("name21", 21));
+		src.add(new TestData("name22", 22));
+		src.add(new TestData("name23", 23));
+		src.add(new TestData("name24", 24));
+		src.add(new TestData("name25", 25));
+		//List<?> dataSourceList = src;
+
+		JRDataSource dataSource = new JRBeanCollectionDataSource(src);
+
+		Map<String, Object> params = new HashMap<>();
+
+		try {
+			byte[] result = getPdfBytes("sample5", params, dataSource);
+			return Response.ok(result)
+					// .header("Content-Disposition", "attachment; filename=" +
+					// URLEncoder.encode("test.pdf", "utf-8"))
+					.build();
+		} catch (JRException e) {
+			return Response.serverError().build();
+		}
+	}
+
+	/**
 	 * PDFデータの取得
 	 *
 	 * @param reportName レポート名
